@@ -1,0 +1,160 @@
+<div class="container relative mx-auto">
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg"><%= flash[:success] %></div>
+    <% end %>
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Pokedex Details</h1>
+    <div class="w-full my-10">
+        <h1 class="text-center text-6xl font-bold mb-5"><%= @pokedex.name%></h1>
+        <div class="flex flex-col md:flex-row md:space-x-8 md:space-y-0 space-y-3 ">
+            <div class = "flex-1 w-full h-fit bg-white box-border p-3 shadow-md drop-shadow-lg rounded-md">
+                <%= image_tag @pokedex.image, class: "bg-gray-300 box-border p-5 rounded-md" %>
+                <div class="flex justify-between items-center px-3 py-5">
+                        <h1 class="text-2xl font-semibold">Level : <%= @pokedex.level%></h1>
+                        <div class="flex space-x-3 text-white">
+                            <% if @pokedex.element_1 == "Fire" %>
+                                <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_1%></h1>
+                            <% elsif @pokedex.element_1 == "Water" %>
+                                <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_1%></h1>
+                            <% elsif @pokedex.element_1 == "Grass" %>
+                                <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_1%></h1>
+                            <% elsif @pokedex.element_1 == "Normal" %>
+                                <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_1%></h1>
+                            <% end %>
+                            <% if @pokedex.element_2 != nil %>
+                                <% if @pokedex.element_2 == "Fire" %>
+                                    <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_2%></h1>
+                                <% elsif @pokedex.element_2 == "Water" %>
+                                    <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_2%></h1>
+                                <% elsif @pokedex.element_2 == "Grass" %>
+                                    <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_2%></h1>
+                                <% elsif @pokedex.element_2 == "Normal" %>
+                                    <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokedex.element_2%></h1>
+                                <% end %>
+                            <% end %>
+                        </div>
+                    </div>
+            </div>
+            <div class = "flex-1 w-full h-20 space-y-3">
+                <div class ="flex flex-row justify-between">
+                    <div class = "basis-1/6 xl:basis-1/12">
+                        <h1 class = "text-2xl font-semibold">Hp :</h1>
+                    </div>
+                    <div class="basis-5/6 xl:basis-11/12">
+                        <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                            <div class="h-8 bg-green-600 rounded-md" style="width: 100%"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+                                <%= @pokedex.max_hp%> / <%= @pokedex.max_hp%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class ="flex flex-row justify-between">
+                    <div class = "basis-1/6 xl:basis-1/12">
+                        <h1 class = "text-2xl font-semibold">Exp :</h1>
+                    </div>
+                    <div class="basis-5/6 xl:basis-11/12">
+                        <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                            <div class="h-8 bg-green-600 rounded-md" style="width: 0%"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+                                0 / <%= @pokedex.max_exp%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class ="pt-5">
+                    <h1 class="text-2xl font-semibold">Stats</h1>
+                    <div class="rounded-md shadow-md drop-shadow-lg p-5 space-y-1">
+                        <div class="flex justify-between">
+                            <p>Attack</p>
+                            <p><%= @pokedex.attack%></p>
+                        </div>
+                        <div class="flex justify-between">
+                            <p>Defence</p>
+                            <p><%= @pokedex.defence%></p>
+                        </div>
+                        <div class="flex justify-between">
+                            <p>Speed</p>
+                            <p><%= @pokedex.speed%></p>
+                        </div>
+                        <div class="flex justify-between">
+                            <p>Special</p>
+                            <p><%= @pokedex.special%></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h2 class="text-2xl font-semibold">Initiate Skill</h2>
+        <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+            <table class="w-full border-separate text-sm text-left text-gray-800">
+                <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                    <tr>
+                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md">Power</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @skills.each_with_index do |skill, index| %>
+                        <% if index%2==0 %>
+                            <tr class = "bg-white">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                <td class = "px-6 py-4"><%= skill.name %></td>
+                                <td class = "px-6 py-4"><%= skill.pp %></td>
+                                <td class = "px-6 py-4"><%= skill.power %></td>
+                            </tr>
+                        <% else %>
+                            <tr class = "bg-gray-100">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                <td class = "px-6 py-4"><%= skill.name %></td>
+                                <td class = "px-6 py-4"><%= skill.pp %></td>
+                                <td class = "px-6 py-4"><%= skill.power %></td>
+                            </tr>
+                        <% end %>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h2 class="text-2xl font-semibold">Skill Information</h2>
+        <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded mb-5">
+            <table class = "w-full border-separate text-sm text-left text-gray-800">
+                <thead class = "text-xs text-gray-700 uppercase bg-gray-400">
+                    <tr>
+                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3">level</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md">Power</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @skills_info.each_with_index do |skill, index| %>
+                        <% if index%2==0 %>
+                            <tr class = "bg-white">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                <td class = "px-6 py-4"><%= skill.level %></td>
+                                <td class = "px-6 py-4"><%= skill.name %></td>
+                                <td class = "px-6 py-4"><%= skill.pp %></td>
+                                <td class = "px-6 py-4"><%= skill.power %></td>
+                            </tr>
+                        <% else %>
+                            <tr class = "bg-gray-100">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                <td class = "px-6 py-4"><%= skill.level %></td>
+                                <td class = "px-6 py-4"><%= skill.name %></td>
+                                <td class = "px-6 py-4"><%= skill.pp %></td>
+                                <td class = "px-6 py-4"><%= skill.power %></td>
+                            </tr>
+                        <% end %>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

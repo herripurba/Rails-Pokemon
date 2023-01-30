@@ -1,0 +1,18 @@
+.pokemon-image img{
+    width: 600px;
+    padding: 50px;
+    /* border-radius: 5%; */
+    border: black solid 2px;
+}
+
+.pokemon-detail .pokemon-detail-items{
+    margin: 0 10px;
+    width: 600px;
+}
+
+.stats{
+    border: black solid 1px;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 20px;
+}

@@ -1,0 +1,42 @@
+<div class="container relative mx-auto">
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg"><%= flash[:success] %></div>
+    <% end %>
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Pokédex</h1>
+
+    <div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <% @pokedexes.each do |pokedex| %>
+            <%= link_to pokedex do %>
+                <div class="w-full h-fit box-border drop-shadow-lg shadow-lg rounded-lg">
+                    <%= image_tag pokedex.image, class: "bg-gray-300 box-border p-5 rounded-t-lg" %>
+                    <div class="flex justify-between items-center px-3 py-5">
+                        <h1 class="text-2xl font-semibold"><%= pokedex.name%></h1>
+                        <div class="flex space-x-3 text-white">
+                            <% if pokedex.element_1 == "Fire" %>
+                                <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_1%></h1>
+                            <% elsif pokedex.element_1 == "Water" %>
+                                <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_1%></h1>
+                            <% elsif pokedex.element_1 == "Grass" %>
+                                <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_1%></h1>
+                            <% elsif pokedex.element_1 == "Normal" %>
+                                <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_1%></h1>
+                            <% end %>
+                            <% if pokedex.element_2 != nil %>
+                                <% if pokedex.element_2 == "Fire" %>
+                                    <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_2%></h1>
+                                <% elsif pokedex.element_2 == "Water" %>
+                                    <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_2%></h1>
+                                <% elsif pokedex.element_2 == "Grass" %>
+                                    <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_2%></h1>
+                                <% elsif pokedex.element_2 == "Normal" %>
+                                    <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= pokedex.element_2%></h1>
+                                <% end %>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+</div>

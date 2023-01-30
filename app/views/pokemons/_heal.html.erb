@@ -1,0 +1,4 @@
+<form action="<%= heal_pokemon_path(@pokemon)%>" method="post">
+    <input type="text" name="id_pokemon" value="<%= @pokemon.id%>" hidden>
+    <input type="submit" value="Heal" class ="cursor-pointer bg-blue-500 font-semibold text-white rounded-md px-5 py-2 box-content text-xl">
+</form>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PokemonBlue</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font"%>
+
+    <%= stylesheet_link_tag "application"%>
+    <%= stylesheet_link_tag "tailwind", "inter-font"%>
+    <%= stylesheet_link_tag "home"%>
+    <%= stylesheet_link_tag "tailwind", "inter-font"%>
+    <%= stylesheet_link_tag "pokedex"%>
+    <%= stylesheet_link_tag "tailwind", "inter-font"%>
+    <%= stylesheet_link_tag "pokemon"%>
+    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <%= render 'layouts/navbar' %>
+
+    <div class="relative mt-24 w-full px-2 sm:px-4 py-4">
+      <%= yield %>
+    </div>
+    <%= javascript_include_tag 'pokemon' %>
+  </body>
+</html>

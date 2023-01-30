@@ -1,0 +1,98 @@
+<div class="container relative mx-auto">
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg duration-500"><%= flash[:success] %></div>
+    <% end %>
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Battles</h1>
+    <div class="flex justify-end mb-2">
+        <%= link_to '+ Create', new_battle_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-fit sm:w-auto px-5 py-2.5 text-center "%>
+    </div>
+    <div class="relative overflow-x-auto shadow-md rounded-md mb-5">
+        <table class=" w-full border-separate text-sm text-left text-gray-800">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-400 ">
+                <tr>
+                    <th scope="col" class="border border-slate-300 rounded-tl-md px-6 py-3">No</th>
+                    <th scope="col" class="border border-slate-300 px-6 py-3">Pokemon I</th>
+                    <th scope="col" class="border border-slate-300 px-6 py-3">Pokemon II</th>
+                    <th scope="col" class="border border-slate-300 px-6 py-3">Winner</th>
+                    <th scope="col" class="border border-slate-300 px-6 py-3">Status</th>
+                    <th scope="col" class="border border-slate-300 rounded-tr-md px-6 py-3"> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @battles.each_with_index do |battle, index| %>
+                    <% if index%2==0 %>
+                        <tr class="bg-white border-b">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1%></td>
+
+                            <% if battle.pokemon_i.is_delete == true %>
+                                <td class= "px-6 py-4 bg-red-400 text-white"><%= battle.pokemon_i.name%></td>
+                            <% else %>
+                                <td class = "px-6 py-4"><%= battle.pokemon_i.name%></td>
+                            <% end %>
+
+                            <% if battle.pokemon_ii.is_delete == true %>
+                                <td class= "px-6 py-4 bg-red-400 text-white"><%= battle.pokemon_ii.name%></td>
+                            <% else %>
+                                <td class="px-6 py-4"><%= battle.pokemon_ii.name%></td>
+                            <% end %>
+
+                            <% if battle.winner == nil %>
+                                <td class="px-6 py-4">-</td>
+                            <% else %>
+                                <td class = "px-6 py-4"><%= battle.winner.name%></td>
+                            <% end %>
+                            
+                            <td class="px-6 py-4"><%= battle.status%></td>
+                            <td class="px-6 py-4">
+                                <div>
+                                    <%= link_to battle do%>
+                                        <%= heroicon "eye", variant: :outline%>
+                                    <% end %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% else %>
+                        <tr class="bg-gray-100 border-b">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1%></td>
+
+                            <% if battle.pokemon_i.is_delete == true %>
+                                <td class= "px-6 py-4 bg-red-400 text-white"><%= battle.pokemon_i.name%></td>
+                            <% else %>
+                                <td class = "px-6 py-4"><%= battle.pokemon_i.name%></td>
+                            <% end %>
+
+                            <% if battle.pokemon_ii.is_delete == true %>
+                                <td class= "px-6 py-4 bg-red-400 text-white"><%= battle.pokemon_ii.name%></td>
+                            <% else %>
+                                <td class="px-6 py-4"><%= battle.pokemon_ii.name%></td>
+                            <% end %>
+
+                            <% if battle.winner == nil %>
+                                <td class="px-6 py-4">-</td>
+                            <% else %>
+                                <td class = "px-6 py-4"><%= battle.winner.name%></td>
+                            <% end %>
+                            
+                            <td class="px-6 py-4"><%= battle.status%></td>
+                            <td class="px-6 py-4">
+                                <div>
+                                    <%= link_to battle do%>
+                                        <%= heroicon "eye", variant: :outline%>
+                                    <% end %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class = "space-y-3">
+        <h1 class="font-semibold text-lg">Legend : </h1>
+        <div class="flex h-fit space-x-3">
+            <div class="w-5 h-5 bg-red-400"></div>
+            <h1>Pokemon Is deleted</h1>
+        </div>
+    </div>
+</div>

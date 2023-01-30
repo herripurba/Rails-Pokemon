@@ -1,0 +1,23 @@
+<div class="flex flex-col md:flex-row md:space-x-8 md:space-y-0 space-y-3">
+    <div class="basis-1/2">
+        <form accept-charset="UTF-8" action="/pokemons" method="post">
+            <div class= "mb-6">
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
+                <input type="text" name= "pokemon[name]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5" placeholder="Input Pokemon Name">
+            </div>
+            <div class="mb-6">
+                <label for="pokedex_id" class="block mb-2 text-sm font-medium text-gray-900">Type</label>
+                <select name="pokemon[pokedex_id]" id="pokemon_pokedex_id" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                    <option value="0"> Select Pokemon</option>
+                    <% pokedexes.each do |pokedex| %>
+                        <option value="<%= pokedex.id %>"><%= pokedex.name%></option>
+                    <% end %>
+                </select>
+            </div>            
+            <div class="flex justify-end">
+                <input type="submit" value="Create" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-fit sm:w-auto px-5 py-2.5 text-center ">    
+            </div>
+        </form>
+    </div>
+    <div class="basis-1/2"></div>
+</div>

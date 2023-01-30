@@ -1,0 +1,15 @@
+<form action="<%= delete_pokemon_pokemon_path(pokemon)%>" method="post" id="delete_pokemon_<%= pokemon.id %>">
+    <input type="text" name="id_pokemon" value="<%= pokemon.id%>" hidden>
+    <button type="button" onclick="submitDeletePokemon('<%= pokemon.id%>')">
+        <%= heroicon "trash", variant: :outline, options: {class: "text-red-500"}%>
+    </button>
+</form>
+
+<script>
+    function submitDeletePokemon(id) {
+        let form = document.querySelector("#delete_pokemon_"+id)
+        if (confirm("Are you sure?")){
+            form.submit()
+        }
+    }
+</script>

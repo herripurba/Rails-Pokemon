@@ -1,0 +1,37 @@
+<form  accept-charset="UTF-8" action="/battles" method="post">
+    <div class="flex flex-col md:flex-row mb-6 space-y-8 md:space-y-0">
+        <div class="basis-5/12">
+            <h1 class="text-xl font-semibold mb-5">Pokemon I</h1>
+            <div class="flex flex-col">
+                <label for="pokemon_i_id" class="block mb-2 text-sm font-medium text-gray-900">Select Pokemon</label>
+                <select name="battle[pokemon_i_id]" id="battle_pokemon_i_id" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                    <option value="Select Pokemon"> Select Pokemon</option>
+                    <% @pokemons.each do |pokemon| %>
+                    <option value="<%= pokemon.id %>"><%= pokemon.name%></option>
+                    <% end %>
+                </select>
+            </div>
+        </div>
+        
+        <div class="basis-2/12 flex items-center justify-center">
+            <h1 class="text-5xl font-bold">V/S</h1>
+        </div>
+        
+        <div class="basis-5/12">
+            <h1 class="text-xl font-semibold mb-5">Pokemon II</h1>
+            <div class="flex flex-col">
+                <label for="pokemon_ii_id" class="block mb-2 text-sm font-medium text-gray-900">Select Pokemon</label>
+                <select name="battle[pokemon_ii_id]" id="battle_pokemon_ii_id" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                    <option value="Select Pokemon"> Select Pokemon</option>
+                    <% @pokemons.each do |pokemon| %>
+                    <option value="<%= pokemon.id %>"><%= pokemon.name%></option>
+                    <% end %>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex md:justify-center justify-end">
+        <input type="submit" value="Create" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-fit sm:w-auto px-5 py-2.5 text-center ">
+    </div>
+</form>

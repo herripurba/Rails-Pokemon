@@ -1,0 +1,627 @@
+<div class="container relative mx-auto">
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Battles</h1>
+    <% if flash[:notice] %>
+        <div id="flash-notice" class="w-full mb-8 py-4 px-5 bg-green-100 text-green-600 rounded-lg font-semibold text-2xl"><%= flash[:notice] %></div>
+    <% elsif @battle.game_over == true && @battle.level_up == false %>
+        <div class="w-full mb-8 py-4 px-5 bg-green-100 text-green-600 rounded-lg font-semibold text-2xl">Congrats to <%= @battle.winner.name.titleize %> for winning the Battle</div>
+    <% else%>
+        <div class="w-full mb-8 py-4 px-5 bg-green-100 text-green-600 rounded-lg font-semibold text-2xl"><%= @battle.header_message %></div>
+    <% end %>
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg transition-all ease-in duration-500"><%= flash[:success] %></div>
+    <% end %>
+
+    <div class="grid lg:grid-cols-12 lg:grid-rows-none grid-rows-5 justify-between">
+
+        <%# Pokemon I %>
+        <div class="lg:col-span-4 lg:row-span-1 row-span-2 space-y-5">
+            <div class="text-center">
+                <h1 class ="text-center text-6xl font-bold mb-5"><%= @battle.pokemon_i.name%></h1>
+            </div>
+            <div class ="flex flex-row justify-between">
+                <div class = "basis-1/6 xl:basis-2/12">
+                    <h1 class = "text-2xl font-semibold">Hp :</h1>
+                </div>
+                <div class="basis-5/6 xl:basis-10/12">
+                    <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                        <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_ii.id %>
+                            <div class="h-8 bg-green-600 rounded-md" id="pokemon_i_hp_bar"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" id="pokemon_i_hp_detail">
+                                <%= @battle.loser_hp%> / <%= @battle.loser_max_hp%>
+                            </div>
+                        <% elsif @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_i.id %>
+                            <div class="h-8 bg-green-600 rounded-md" id="pokemon_i_hp_bar"></div>
+                            <div class= "absolute flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" >
+                                <div id="pokemon_i_hp_detail">
+                                    <%= @battle.winner_hp%> / <%= @battle.winner_max_hp%>
+                                </div>
+                                <% if @battle.level_up==true %>
+                                    <h1 class="text-blue-600 pl-3">+<%= @battle.winner_hp_plus%></h1>
+                                <% end %>
+                            </div>
+                        <% else%>
+                            <div class="h-8 bg-green-600 rounded-md" id="pokemon_i_hp_bar"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" id="pokemon_i_hp_detail">
+                                <%= @pokemon_i.pokemon_hp%> / <%= @pokemon_i.pokemon_max_hp%>
+                            </div>
+                        <% end %>   
+                    </div>
+                </div>
+            </div>
+            <div class = "w-full h-fit bg-white box-border p-3 shadow-md drop-shadow-lg rounded-md">
+                <div class = "relative w-full h-full">
+                    <% if @battle.winner_id == @pokemon_i.id %>
+                        <div class = "absolute h-full w-full z-10 opacity-80 bg-gray-600  rounded-md flex justify-center items-center">
+                            <h1 class="text-7xl font-bold text-yellow-400">Win</h1>
+                            <% if @pokemon_i.is_delete ==true %>
+                                <div class="absolute text-center bottom-0 w-full bg-red-300  rounded-b-md">
+                                    <h1 class="text-red-700 font-semibold text-xl">Deleted</h1>
+                                </div>
+                            <% end %>
+                        </div>
+                    <% elsif @battle.winner_id ==@pokemon_ii.id %>
+                        <div class = "absolute h-full w-full z-10 opacity-80 bg-gray-600  rounded-md flex justify-center items-center">
+                            <h1 class="text-7xl font-bold text-red-400">Lose</h1>
+                            <% if @pokemon_i.is_delete ==true %>
+                                <div class="absolute text-center bottom-0 w-full bg-red-300  rounded-b-md">
+                                    <h1 class="text-red-700 font-semibold text-xl">Deleted</h1>
+                                </div>
+                            <% end %>
+                        </div>
+                    <% end %>
+                    <%= image_tag @pokemon_i.pokedex.image, class: "bg-gray-300 box-border p-5 rounded-md" %>
+                </div>
+                <div class="flex justify-between items-center px-3 py-5">
+                    <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_ii.id %>
+                        <h1 class="text-2xl font-semibold">Level : <%= @battle.loser_level%></h1>
+                    <% elsif @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_i.id %>
+                        <div class = "flex">
+                            <h1 class="text-2xl font-semibold">Level : <%= @battle.winner_level_old%></h1>
+                            <% if @battle.level_up==true %>
+                                <h1 class="text-2xl font-semibold text-green-600 pl-3">+<%= @battle.winner_level_plus%></h1>
+                            <% end %>
+                        </div>
+                    <% else%>
+                        <h1 class="text-2xl font-semibold">Level : <%= @pokemon_i.level%></h1>
+                    <% end %>
+                    <div class="flex space-x-3 text-white">
+                        <% if @pokemon_i.pokedex.element_1 == "Fire" %>
+                            <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_1%></h1>
+                        <% elsif @pokemon_i.pokedex.element_1 == "Water" %>
+                            <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_1%></h1>
+                        <% elsif @pokemon_i.pokedex.element_1 == "Grass" %>
+                            <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_1%></h1>
+                        <% elsif @pokemon_i.pokedex.element_1 == "Normal" %>
+                            <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_1%></h1>
+                        <% end %>
+                        <% if @pokemon_i.pokedex.element_2 != nil %>
+                            <% if @pokemon_i.pokedex.element_2 == "Fire" %>
+                                <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_2%></h1>
+                            <% elsif @pokemon_i.pokedex.element_2 == "Water" %>
+                                <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_2%></h1>
+                            <% elsif @pokemon_i.pokedex.element_2 == "Grass" %>
+                                <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_2%></h1>
+                            <% elsif @pokemon_i.pokedex.element_2 == "Normal" %>
+                                <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_i.pokedex.element_2%></h1>
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <% if @battle.status != "End" && @battle.change_skill == false%>
+                <% if @battle.current_attacker_id == @pokemon_i.id %>
+                    <div>
+                        <h2 class="text-2xl font-semibold">Skill</h2>
+                        <div class="relative overflow-x-auto shadow-md drop-shadow-lg mb-5">
+                            <table class="w-full border-separate text-sm rounded-md  text-left text-gray-800">
+                                <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                    <tr>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                        <% if index%2==0 %>
+                                            <tr class = "bg-white">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'attack', pokemon_i_skill: pokemon_i_skill%></td>
+                                            </tr>
+                                        <% else %>
+                                            <tr class = "bg-gray-100">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'attack', pokemon_i_skill: pokemon_i_skill%></td>
+                                            </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% end %>
+            <% elsif  @battle.status == "End" && @battle.winner_id == @battle.pokemon_i_id  && @battle.change_skill == false %>
+                <div>
+                    <div class ="flex flex-row justify-between">
+                        <div class = "basis-1/6 xl:basis-2/12">
+                            <h1 class = "text-2xl font-semibold">Exp :</h1>
+                        </div>
+                        <div class="basis-5/6 xl:basis-10/12">
+                            <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                                <div class="h-8 bg-blue-600 rounded-md"  id="pokemon_i_exp_bar"></div>
+                                <div class= "absolute flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+                                    <div  id="pokemon_i_exp_detail">
+                                        <%= @battle.winner_exp%> / <%= @battle.winner_max_exp%>
+                                    </div>
+                                    <h1 class="text-green-600 pl-3">+<%= @battle.winner_exp_plus%></h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class ="pt-5">
+                        <h1 class="text-2xl font-semibold">Stats</h1>
+                        <div class="rounded-md shadow-md drop-shadow-lg p-5 space-y-1">
+                            <div class="flex justify-between font-medium">
+                                <p>Attack</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_attack_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_attack_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Defence</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_defence_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_defence_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Speed</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_speed_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_speed_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Special</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_special_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_special_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold">Skill</h2>
+                    <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+                        <table class="w-full border-separate text-sm text-left text-gray-800">
+                            <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                <tr>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md">PP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                    <% if index%2==0 %>
+                                        <tr class = "bg-white">
+                                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                        </tr>
+                                    <% else %>
+                                        <tr class = "bg-gray-100">
+                                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                        </tr>
+                                    <% end %>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                    
+            <% elsif @battle.status == "End" && @battle.change_skill == true%>
+                <% if @battle.winner_id == @pokemon_i.id  %>
+                    <div>
+                        <h2 class="text-2xl font-semibold">Skill</h2>
+                        <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+                            <table class="w-full border-separate text-sm text-left text-gray-800">
+                                <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                    <tr>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                        <% if index%2==0 %>
+                                            <tr class = "bg-white">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'change', pokemon_i_skill: pokemon_i_skill%></td>
+                                            </tr>
+                                        <% else %>
+                                            <tr class = "bg-gray-100">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'change', pokemon_i_skill: pokemon_i_skill%></td>
+                                            </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+
+        <%# V/S %>
+        <div class="lg:col-span-4 row-span-1 flex h-full justify-center flex-col space-y-5 items-center">
+                <h1 class="text-center text-4xl font-bold">V/S</h1>    
+                <% if @battle.status == "End" %>
+                    <h1 class= "text-6xl font-extrabold text-red-600">Game Over</h1>
+                <% else %>
+                    <div class = "px-5 py-2 w-[90%] h-24 box-border mx-5 border-2 border-solid border-black rounded-xl">
+                        <% if @battle.attacker_name != nil && @battle.defender_name != nil %>
+                            <p class="text-center text-lg"><%= @battle.attacker_name%> attack <%= @battle.defender_name%>  with skill <%= @battle.attacker_skill_name%> which deals a total of  <%= @battle.attacker_total_damage%> damage</p>
+                        <% end %>
+                    </div>  
+                <% end %>
+        </div>
+
+        <%# Poekmon II  %>
+        <div class ="lg:col-span-4 lg:row-span-1 row-span-2 space-y-5">
+            <div class="text-center">
+                <h1 class ="text-center text-6xl font-bold mb-5"><%= @battle.pokemon_ii.name%></h1>
+            </div>
+            <div class ="flex flex-row justify-between">
+                <div class = "basis-1/6 xl:basis-2/12">
+                    <h1 class = "text-2xl font-semibold">Hp :</h1>
+                </div>
+                <div class="basis-5/6 xl:basis-10/12">
+                    <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                        <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_i.id %>
+                            <div class="h-8 bg-green-600 rounded-md"  id="pokemon_ii_hp_bar"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" id="pokemon_ii_hp_detail">
+                                <%= @battle.loser_hp%> / <%= @battle.loser_max_hp%>
+                            </div>
+                        <% elsif @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_ii.id %>
+                            <div class="h-8 bg-green-600 rounded-md"  id="pokemon_ii_hp_bar"></div>
+                            <div class= "absolute flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+                                <div id="pokemon_ii_hp_detail">
+                                    <%= @battle.winner_hp%> / <%= @battle.winner_max_hp%>
+                                </div>
+                                <% if @battle.level_up==true %>
+                                    <h1 class="text-blue-600 pl-3">+<%= @battle.winner_hp_plus%></h1>
+                                <% end %>
+                            </div>
+                        <% else%>
+                            <div class="h-8 bg-green-600 rounded-md"  id="pokemon_ii_hp_bar"></div>
+                            <div class= "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" id="pokemon_ii_hp_detail">
+                                <%= @pokemon_ii.pokemon_hp%> / <%= @pokemon_ii.pokemon_max_hp%>
+                            </div>
+                        <% end %>   
+                    </div>
+                </div>
+            </div>
+            <div class = "w-full h-fit bg-white box-border p-3 shadow-md drop-shadow-lg rounded-md">
+                <div class = "relative w-full h-full">
+                    <% if @battle.winner_id == @pokemon_ii.id %>
+                        <div class = "absolute h-full w-full z-10 opacity-80 bg-gray-600  rounded-md flex justify-center items-center">
+                            <h1 class="text-7xl font-bold text-yellow-400">Win</h1>
+                            <% if @pokemon_ii.is_delete ==true %>
+                                <div class="absolute text-center bottom-0 w-full bg-red-300  rounded-b-md">
+                                    <h1 class="text-red-700 font-semibold text-xl">Deleted</h1>
+                                </div>
+                            <% end %>
+                        </div>
+                    <% elsif @battle.winner_id ==@pokemon_i.id %>
+                        <div class = "absolute h-full w-full z-10 opacity-80 bg-gray-600  rounded-md flex justify-center items-center">
+                            <h1 class="text-7xl font-bold text-red-400">Lose</h1>
+                            <% if @pokemon_ii.is_delete ==true %>
+                                <div class="absolute text-center bottom-0 w-full bg-red-300  rounded-b-md">
+                                    <h1 class="text-red-700 font-semibold text-xl">Deleted</h1>
+                                </div>
+                            <% end %>
+                        </div>
+                    <% end %>
+                    <%= image_tag @pokemon_ii.pokedex.image, class: "bg-gray-300 box-border p-5 rounded-md" %>
+                </div>
+                <div class="flex justify-between items-center px-3 py-5">
+                    <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_i.id %>
+                        <h1 class="text-2xl font-semibold">Level : <%= @battle.loser_level%></h1>
+                    <% elsif @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_ii.id %>
+                        <div class = "flex">
+                            <h1 class="text-2xl font-semibold">Level : <%= @battle.winner_level_old%></h1>
+                            <% if @battle.level_up==true %>
+                                <h1 class="text-2xl font-semibold text-green-600 pl-3">+<%= @battle.winner_level_plus%></h1>
+                            <% end %>
+                        </div>
+                    <% else%>
+                        <h1 class="text-2xl font-semibold">Level : <%= @pokemon_ii.level%></h1>
+                    <% end %>
+                    <div class="flex space-x-3 text-white">
+                        <% if @pokemon_ii.pokedex.element_1 == "Fire" %>
+                            <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_1%></h1>
+                        <% elsif @pokemon_ii.pokedex.element_1 == "Water" %>
+                            <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_1%></h1>
+                        <% elsif @pokemon_ii.pokedex.element_1 == "Grass" %>
+                            <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_1%></h1>
+                        <% elsif @pokemon_ii.pokedex.element_1 == "Normal" %>
+                            <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_1%></h1>
+                        <% end %>
+                        <% if @pokemon_ii.pokedex.element_2 != nil %>
+                            <% if @pokemon_ii.pokedex.element_2 == "Fire" %>
+                                <h1 class="bg-red-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_2%></h1>
+                            <% elsif @pokemon_ii.pokedex.element_2 == "Water" %>
+                                <h1 class="bg-blue-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_2%></h1>
+                            <% elsif @pokemon_ii.pokedex.element_2 == "Grass" %>
+                                <h1 class="bg-green-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_2%></h1>
+                            <% elsif @pokemon_ii.pokedex.element_2 == "Normal" %>
+                                <h1 class="bg-gray-500 rounded-md w-20 text-center font-semibold py-1"><%= @pokemon_ii.pokedex.element_2%></h1>
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <% if @battle.status != "End" && @battle.change_skill == false %>
+                <% if @battle.current_attacker_id == @pokemon_ii.id %>
+                    <div>
+                        <h2 class="text-2xl font-semibold">Skill</h2>
+                        <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+                            <table class="w-full border-separate text-sm text-left text-gray-800">
+                                <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                    <tr>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                        <% if index%2==0 %>
+                                            <tr class = "bg-white">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'attack2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                            </tr>
+                                        <% else %>
+                                            <tr class = "bg-gray-100">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'attack2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                            </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>            
+                    </div>
+                <% end %>
+            <% elsif  @battle.status == "End" && @battle.winner_id == @battle.pokemon_ii_id && @battle.change_skill ==false %>
+                <div>
+                    <div class ="flex flex-row justify-between">
+                        <div class = "basis-1/6 xl:basis-2/12">
+                            <h1 class = "text-2xl font-semibold">Exp :</h1>
+                        </div>
+                        <div class="basis-5/6 xl:basis-10/12">
+                            <div class=" relative w-full h-8 bg-gray-300 rounded-md ">
+                                <div class="h-8 bg-blue-600 rounded-md"  id="pokemon_ii_exp_bar"></div>
+                                <div class= "absolute flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+                                    <div  id="pokemon_ii_exp_detail">
+                                        <%= @battle.winner_exp%> / <%= @battle.winner_max_exp%>
+                                    </div>
+                                    <h1 class="text-green-600 pl-3">+<%= @battle.winner_exp_plus%></h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class ="pt-5">
+                        <h1 class="text-2xl font-semibold">Stats</h1>
+                        <div class="rounded-md shadow-md drop-shadow-lg p-5 space-y-1">
+                            <div class="flex justify-between font-medium">
+                                <p>Attack</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_attack_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_attack_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Defence</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_defence_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_defence_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Speed</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_speed_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_speed_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="flex justify-between font-medium">
+                                <p>Special</p>
+                                <div class="flex">
+                                    <p><%= @battle.winner_special_old%></p>
+                                    <% if @battle.level_up==true %>
+                                        <p class="text-green-600 pl-3">+<%= @battle.winner_special_plus%></p>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold">Skill</h2>
+                    <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+                        <table class="w-full border-separate text-sm text-left text-gray-800">
+                            <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                <tr>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                    <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tr-md">PP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                    <% if index%2==0 %>
+                                        <tr class = "bg-white">
+                                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                        </tr>
+                                    <% else %>
+                                        <tr class = "bg-gray-100">
+                                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                            <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                        </tr>
+                                    <% end %>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>         
+                </div>
+            <% elsif @battle.status == "End" && @battle.change_skill == true%>
+                <% if @battle.winner_id == @pokemon_ii.id %>
+                    <div>
+                        <h2 class="text-2xl font-semibold">Skill</h2>
+                        <div class="relative overflow-x-auto shadow-md drop-shadow-lg rounded-md mb-5">
+                            <table class="w-full border-separate text-sm text-left text-gray-800">
+                                <thead class ="text-xs text-gray-700 uppercase bg-gray-400">
+                                    <tr>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md">No</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">Skill Name</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3">PP</th>
+                                        <th scope="col" class="border border-slate-300 px-6 py-3 rounded-tl-md"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                        <% if index%2==0 %>
+                                            <tr class = "bg-white">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'change2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                            </tr>
+                                        <% else %>
+                                            <tr class = "bg-gray-100">
+                                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1 %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.skill.name %></td>
+                                                <td class = "px-6 py-4"><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                                <td class = "px-6 py-4"><%= render 'change2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                            </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+
+<% if @battle.get_new_skill ==true && @battle.change_skill == false %>
+    <% if  @battle.winner.pokemon_skills.count >= 4%>
+    <div class = "fixed flex justify-center items-center w-full h-full bg-gray-700 z-50 top-0 left-0 overflow-y-auto bg-opacity-80">
+    <%# <div id="popup-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full"> %>
+        <div class = "bg-white w-2/6 h-fit rounded-xl p-8 opacity-100 text-center space-y-3">
+            <h1 class="text-5xl text-green-600 font-extrabold">New Skill</h1>
+            <p class="text-lg">Congratulations to Pokemon <strong><%= @battle.winner.name.titleize%></strong> for winning the battle and leveling up. From this level increase, Pokemon <strong><%= @battle.winner.name.titleize%></strong> gets a bonus new skill, namely </p>
+            <p class="italic font-semibold text-2xl text-yellow-600 bg-yellow-200 rounded-lg">
+                <%= @battle.skill.name%>
+            </p>
+            <p class="text-lg font-normal">Do you want to replace the existing skill with this new skill?</p>
+            <div class="grid grid-cols-2 gap-5 w-full justify-center">
+                <div class="col-span-1">
+                    <%= render 'popupdontchange', battle: @battle%>
+                </div>
+                <div class="col-span-1 ">
+                    <%= render 'popupchange', battle: @battle%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% end %>
+<% end %>
+
+
+
+
+<script>
+const pokemon_i_hp_detail = document.getElementById("pokemon_i_hp_detail");
+const pokemon_i_hp_bar = document.getElementById("pokemon_i_hp_bar");
+const pokemon_ii_hp_detail = document.getElementById("pokemon_ii_hp_detail");
+const pokemon_ii_hp_bar = document.getElementById("pokemon_ii_hp_bar");
+
+
+let pokemon_i_hp_detail_split = pokemon_i_hp_detail.innerHTML.trim().split("/");
+let pokemon_i_hp_bar_calculate = pokemon_i_hp_detail_split[0]/pokemon_i_hp_detail_split[1]*100;
+let pokemon_ii_hp_detail_split = pokemon_ii_hp_detail.innerHTML.trim().split("/");
+let pokemon_ii_hp_bar_calculate = pokemon_ii_hp_detail_split[0]/pokemon_ii_hp_detail_split[1]*100;
+
+pokemon_i_hp_bar.style.width = String(pokemon_i_hp_bar_calculate)+"%";
+pokemon_ii_hp_bar.style.width = String(pokemon_ii_hp_bar_calculate)+"%";
+
+const pokemon_i_exp_detail = document.getElementById("pokemon_i_exp_detail");
+const pokemon_i_exp_bar = document.getElementById("pokemon_i_exp_bar");
+const pokemon_ii_exp_detail = document.getElementById("pokemon_ii_exp_detail");
+const pokemon_ii_exp_bar = document.getElementById("pokemon_ii_exp_bar");
+
+if(pokemon_i_exp_detail != null){
+    let pokemon_i_exp_detail_split = pokemon_i_exp_detail.innerHTML.trim().split("/");
+    let pokemon_i_exp_bar_calculate = pokemon_i_exp_detail_split[0]/pokemon_i_exp_detail_split[1]*100;
+    pokemon_i_exp_bar.style.width = String(pokemon_i_exp_bar_calculate)+"%";
+} else if(pokemon_ii_exp_detail != null){
+    let pokemon_ii_exp_detail_split = pokemon_ii_exp_detail.innerHTML.trim().split("/");
+    let pokemon_ii_exp_bar_calculate = pokemon_ii_exp_detail_split[0]/pokemon_ii_exp_detail_split[1]*100;
+    pokemon_ii_exp_bar.style.width = String(pokemon_ii_exp_bar_calculate)+"%";
+}
+
+const flash_succes = document.getElementById("flash-success");
+if(flash_succes != null){
+
+    const flashTimeout = setTimeout(closeFlash,5000);
+    function closeFlash() {
+        flash_succes.classList.remove("block");
+        flash_succes.classList.add("hidden");
+    }
+}
+</script>

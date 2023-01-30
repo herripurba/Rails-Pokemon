@@ -1,0 +1,310 @@
+<div class="container mx-auto">
+    <h1 class="text-5xl font-bold py-12">Battles</h1>
+    <div class="flex justify-between">
+
+        <%# Pokemon I %>
+        <div>
+            <div class="flex justify-space-between">
+                <h1><%= @battle.pokemon_i.name%></h1>
+                <% if @battle.pokemon_i.is_delete == true %>
+                    <h1 class="text-red">Pokemon Is Deleted</h1>
+                <% end %>
+            </div>
+            <div class="pokemon-image pokemon-detail-items">
+                <div class="flex mb-5">
+                    <p class="width-fit pokemon-hp-label">hp: 
+                    </p>
+                    <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_ii.id %>
+                        <p class="pokemon-hp">
+                            0 / <%= @pokemon_i.pokemon_max_hp%>
+                        </p>
+                    <% else%>
+                        <p class="pokemon-hp">
+                            <%= @pokemon_i.pokemon_hp%> / <%= @pokemon_i.pokemon_max_hp%>
+                        </p>
+                    <% end %>
+                </div>
+                <div>
+                    <%= image_tag @pokemon_i.pokedex.image %>
+                </div>
+                <div class="flex justify-space-between">
+                    <div class="flex">
+                        <h2 class="mr-5">Level : </h2>
+                        <h2><%= @pokemon_i.level%></h2>
+                    </div>
+                    <div class="text-right">
+                        <h2><%= @pokemon_i.pokedex.element_1%></h2>
+                    </div>
+                </div>
+            </div>
+            <% if @battle.status != "End" && @battle.change_skill == false%>
+                <% if @battle.current_attacker_id == @pokemon_i.id %>
+                    <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_i_skill.skill.name %></td>
+                                        <td><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                        <td><%= render 'attack', pokemon_i_skill: pokemon_i_skill%></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% end %>
+            <% elsif  @battle.status == "End" && @battle.winner_id == @battle.pokemon_i_id  && @battle.change_skill == false %>
+                <div>
+                    <div class="flex mb-5">
+                        <p class="width-fit pokemon-exp-label">exp: 
+                        </p>    
+                        <p class="pokemon-exp">
+                            <%= @pokemon_i.pokemon_exp%> / <%= @pokemon_i.pokemon_max_exp%>
+                        </p>
+                    </div>
+                    <h2>Stats</h2>
+                    <div class="stats">
+                        <div class="flex justify-space-between">
+                            <p>Attack</p>
+                            <p><%= @battle.pokemon_i.pokemon_attack%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Defence</p>
+                            <p><%= @battle.pokemon_i.pokemon_defence%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Speed</p>
+                            <p><%= @battle.pokemon_i.pokemon_speed%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Special</p>
+                            <p><%= @battle.pokemon_i.pokemon_special%></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_i_skill.skill.name %></td>
+                                        <td><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+            <% elsif @battle.status == "End" && @battle.change_skill == true%>
+                <% if @battle.winner_id == @pokemon_i.id  %>
+                    <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_i_skills.each_with_index do |pokemon_i_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_i_skill.skill.name %></td>
+                                        <td><%= pokemon_i_skill.last_pp%> / <%= pokemon_i_skill.skill.pp %></td>
+                                        <td><%= render 'change', pokemon_i_skill: pokemon_i_skill%></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+
+        <%# V/S %>
+        <div class="flex justify-center flex-col">
+                <h1 class="text-center">V/S</h1>    
+                <% if @battle.status == "End" %>
+                    <h3>Game Over</h3>
+                    <h3><%= @battle.winner.name%> Win</h3>
+                    <%= link_to 'Exit', battles_path %>
+                    <% if @battle.get_new_skill ==true && @battle.change_skill == false %>
+                        <% if  @battle.winner.pokemon_skills.count >= 4%>
+                            <h1>
+                            <%= @battle.skill.name%>
+                            </h1>
+                            <%= link_to 'Change Skill', change_skill_state_battle_path(@battle),
+                                data: { turbo_method: :post, turbo_confirm: "Are u sure to change skill?"}
+                            %>
+                            <%= link_to 'Dont Change', dont_change_or_add_skill_state_battle_path(@battle),
+                                data: { turbo_method: :post, turbo_confirm: "Are u sure don't want to change skill?"}
+                            %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+        </div>
+
+        <%# Poekmon II  %>
+        <div>
+
+            <div class="flex justify-space-between">
+                <h1><%= @battle.pokemon_ii.name%></h1>
+                <% if @battle.pokemon_ii.is_delete == true %>
+                    <h1 class="text-red">Pokemon Is Deleted</h1>
+                <% end %>
+            </div>
+            <div class="pokemon-image pokemon-detail-items">
+                <div class="flex mb-5">
+                    <p class="width-fit pokemon-hp-label">hp: 
+                    </p>
+                    <% if @battle.status == "End" && @battle.game_over ==true && @battle.winner_id == @pokemon_i.id%>
+                        <p class="pokemon-hp">
+                            0 / <%= @pokemon_ii.pokemon_max_hp%>
+                        </p>
+                    <% else%>
+                        <p class="pokemon-hp">
+                            <%= @pokemon_ii.pokemon_hp%> / <%= @pokemon_ii.pokemon_max_hp%>
+                        </p>
+                    <% end %>
+                </div>
+                <div>
+                    <%= image_tag @pokemon_ii.pokedex.image %>
+                </div>
+                <div class="flex justify-space-between">
+                    <div class="flex">
+                        <h2 class="mr-5">Level : </h2>
+                        <h2><%= @pokemon_ii.level%></h2>
+                    </div>
+                    <div class="text-right">
+                        <h2><%= @pokemon_ii.pokedex.element_1%></h2>
+                    </div>
+                </div>
+            </div>
+            <% if @battle.status != "End" && @battle.change_skill == false %>
+                <% if @battle.current_attacker_id == @pokemon_ii.id %>
+                    <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_ii_skill.skill.name %></td>
+                                        <td><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                        <td><%= render 'attack2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>            
+                <% end %>
+            <% elsif  @battle.status == "End" && @battle.winner_id == @battle.pokemon_ii_id && @battle.change_skill ==false %>
+                <div>
+                    <div class="flex mb-5">
+                        <p class="width-fit pokemon-exp-label">exp: 
+                        </p>    
+                        <p class="pokemon-exp">
+                            <%= @pokemon_ii.pokemon_exp%> / <%= @pokemon_ii.pokemon_max_exp%>
+                        </p>
+                    </div>
+                    <h2>Stats</h2>
+                    <div class="stats">
+                        <div class="flex justify-space-between">
+                            <p>Attack</p>
+                            <p><%= @battle.pokemon_ii.pokemon_attack%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Defence</p>
+                            <p><%= @battle.pokemon_ii.pokemon_defence%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Speed</p>
+                            <p><%= @battle.pokemon_ii.pokemon_speed%></p>
+                        </div>
+                        <div class="flex justify-space-between">
+                            <p>Special</p>
+                            <p><%= @battle.pokemon_ii.pokemon_special%></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_ii_skill.skill.name %></td>
+                                        <td><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>         
+            <% elsif @battle.status == "End" && @battle.change_skill == true%>
+                <% if @battle.winner_id == @pokemon_ii.id %>
+                    <div class="content-space">
+                        <h2>Skill</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Skill Name</th>
+                                    <th>PP</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @pokemon_ii_skills.each_with_index do |pokemon_ii_skill, index| %>
+                                    <t>
+                                        <td><%= index+1 %></td>
+                                        <td><%= pokemon_ii_skill.skill.name %></td>
+                                        <td><%= pokemon_ii_skill.last_pp%> / <%= pokemon_ii_skill.skill.pp %></td>
+                                        <td><%= render 'change2', pokemon_ii_skill: pokemon_ii_skill%></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>

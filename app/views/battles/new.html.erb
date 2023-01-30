@@ -1,0 +1,23 @@
+<div class="container mx-auto space-y-5">
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg"><%= flash[:success] %></div>
+    <% end %>
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Battles</h1>
+
+    <% if @battle.errors.any? %>
+        <div id="error_explanation" class ="field_with_errors bg-red-200 w-full rounded-lg p-5">
+            <h2 class= "md:text-3xl text-xl font-semibold"><%= pluralize(@battle.errors.count, "Error") %> prohibited this Battle From being created:</h2>
+
+            <ul class="ml-8">
+            <% @battle.errors.each do |error| %>
+                <li class="list-disc"><%= error.message %></li>
+            <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <div>
+        <%= render 'form', battle: @battle, pokemons: @pokemons %>
+    </div>
+</div>

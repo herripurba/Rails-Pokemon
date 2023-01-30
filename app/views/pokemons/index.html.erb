@@ -1,0 +1,79 @@
+<div class="container relative mx-auto">
+
+    <% if flash[:success] %>
+        <div id="flash-success" class="absolute block right-0 top-0 bg-green-100 m-3 py-3 px-5 text-green-600 rounded-lg font-semibold text-lg"><%= flash[:success] %></div>
+    <% end %>
+    <h1 class="md:text-5xl text-3xl font-bold py-12">Pokemon</h1>
+    <div class="flex justify-end mb-2">
+        <%= link_to '+ Create', new_pokemon_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-fit sm:w-auto px-5 py-2.5 text-center "%>
+    </div>
+    <div class="relative overflow-x-auto shadow-md rounded-md mb-5">
+        <table class="w-full border-separate text-sm text-left text-gray-800">
+            <thead class = "text-xs text-gray-700 uppercase bg-gray-400">
+                <tr>
+                    <th scope="col" class="border rounded-tl-md border-slate-300 px-6 py-3">No</th>
+                    <th scope="col" class="border  border-slate-300 px-6 py-3">Name</th>
+                    <th scope="col" class="border  border-slate-300 px-6 py-3">Pokedex</th>
+                    <th scope="col" class="border  border-slate-300 px-6 py-3">Level</th>
+                    <th scope="col" class="border  border-slate-300 px-6 py-3">Status</th>
+                    <th scope="col" class="border rounded-tr-md  border-slate-300 px-6 py-3"> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @pokemons.each_with_index do |pokemon, index| %>
+                    <% if index%2==0 %>
+                        <tr class = "bg-white border-b">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><%= index+1%></td>
+                            <td class = "px-6 py-4"><%= pokemon.name%></td>
+                            <td class = "px-6 py-4"><%= pokemon.pokedex.name%></td>
+                            <td class = "px-6 py-4"><%= pokemon.level%></td>
+                            <td class = "px-6 py-4"><%= pokemon.status%></td>
+                            <td class = "px-6 py-4">
+                                <div class="flex space-x-3 items-center">
+                                    <%= link_to(pokemon) do %>
+                                        <%= heroicon "eye", variant: :outline%>
+                                    <% end %>
+                                    <% if pokemon.status != "In Battle" %>
+                                        <%= render 'delete', pokemon: pokemon %>
+                                    <% end %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% else %>
+                        <tr class = "bg-gray-100 border-b">
+                            <td scope="row" class="px-6 py-4 font-medium red text-gray-900 whitespace-nowrap"><%= index+1%></td>
+                            <td class = "px-6 py-4"><%= pokemon.name%></td>
+                            <td class = "px-6 py-4"><%= pokemon.pokedex.name%></td>
+                            <td class = "px-6 py-4"><%= pokemon.level%></td>
+                            <td class = "px-6 py-4"><%= pokemon.status%></td>
+                            <td class = "px-6 py-4">
+                                <div class="flex space-x-3 items-center">
+                                    <%= link_to(pokemon) do %>
+                                        <%= heroicon "eye", variant: :outline%>
+                                    <% end %>
+                                    <% if pokemon.status != "In Battle" %>
+                                        <%= render 'delete', pokemon: pokemon %>
+                                    <% end %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+    const flash_succes = document.getElementById("flash-success");
+    if(flash_succes != null){
+
+        const flashTimeout = setTimeout(closeFlash,5000);
+        function closeFlash() {
+            flash_succes.classList.remove("block");
+            flash_succes.classList.add("hidden");
+        }
+}
+</script>

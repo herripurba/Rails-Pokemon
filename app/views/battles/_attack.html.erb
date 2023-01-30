@@ -1,0 +1,8 @@
+<form action="<%= attack_battle_path(@battle)%>" method="post">
+    <input type="text" name="pokemon_attack_id" value="<%= @pokemon_i.id%>" hidden>
+    <input type="text" name="pokemon_got_damage_id" value="<%= @pokemon_ii.id%>" hidden>
+    <input type="text" name="battle_detail[skill_id]" value="<%= pokemon_i_skill.id%>" hidden>
+    <input type="text" name="battle_detail[battle_id]" value="<%= @battle.id%>" hidden>
+    <input type="text" name="battle_detail[pokemon_id]" value="<%= @pokemon_i.id%>" hidden>
+    <input type="submit" value="Attack" class ="rounded-md bg-blue-500 py-1 px-5 text-white font-semibold">
+</form>
